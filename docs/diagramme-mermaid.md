@@ -270,4 +270,4 @@ erDiagram
     RELEVE_TERRAIN }o--|| UTILISATEUR : "validé par (expert)"
     RELEVE_TERRAIN }o--|| UTILISATEUR : "créé par (agent)"
     DEMANDE_PERMIS }o--|| UTILISATEUR : "instruit par (urbaniste)"
- `Ajout diagramme Mermaid`
+
