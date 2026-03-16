@@ -263,3 +263,56 @@ CHECK (RAPPORT.periode_fin > periode_debut)
 -- Coordonnées GPS
 CHECK (POINT_MESURE.latitude BETWEEN -90 AND 90)
 CHECK (POINT_MESURE.longitude BETWEEN -180 AND 180)
+
+-- AUDIT_LOG : pas de modification
+CREATE RULE no_update_audit AS ON UPDATE TO AUDIT_LOG DO INSTEAD NOTHING;
+CREATE RULE no_delete_audit AS ON DELETE TO AUDIT_LOG DO INSTEAD NOTHING;
+
+-- HISTORIQUE_CLASSIFICATION : même règle
+-- CALCUL_RECUL : seulement depuis relevés VALIDE
+-- DEMANDE_PERMIS.classification_zone_au_depot : figé à l'INSERT
+
+BEFORE UPDATE ON ZONE_COTIERE
+WHEN (classification_actuelle = 'ROUGE' AND NEW.classification = 'VERTE')
+THEN
+    IF NOT EXISTS (
+        SELECT 1 FROM HISTORIQUE_CLASSIFICATION 
+        WHERE id_zone = NEW.id_zone 
+        AND classification_apres = 'VERTE'
+        AND id_expert_2 IS NOT NULL 
+        AND id_admin IS NOT NULL
+    ) THEN
+        RAISE EXCEPTION 'Double validation obligatoire pour passage ROUGE→VERT';
+    END IF;
+
+-- Zones
+CREATE INDEX idx_zone_classification ON ZONE_COTIERE(classification_actuelle, region);
+CREATE INDEX idx_zone_recul ON ZONE_COTIERE(recul_annuel_moyen);
+
+-- Points de mesure
+CREATE INDEX idx_point_zone ON POINT_MESURE(id_zone, actif);
+CREATE INDEX idx_point_coords ON POINT_MESURE USING GIST(geom_point);
+
+-- Relevés
+CREATE INDEX idx_releve_point_date ON RELEVE_TERRAIN(id_point, date_mesure DESC);
+CREATE INDEX idx_releve_statut ON RELEVE_TERRAIN(statut_validation);
+CREATE INDEX idx_releve_date ON RELEVE_TERRAIN(date_mesure);
+
+-- Historique
+CREATE INDEX idx_historique_zone_date ON HISTORIQUE_CLASSIFICATION(id_zone, date_changement DESC);
+
+-- Alertes
+CREATE INDEX idx_alerte_statut ON ALERTE(statut, niveau);
+CREATE INDEX idx_alerte_zone ON ALERTE(id_zone, date_creation DESC);
+
+-- Parcelles et permis
+CREATE INDEX idx_parcelle_zone ON PARCELLE(id_zone, dans_dpm_100m);
+CREATE INDEX idx_demande_statut ON DEMANDE_PERMIS(statut, date_depot);
+CREATE INDEX idx_demande_parcelle ON DEMANDE_PERMIS(id_parcelle);
+
+-- Notifications
+CREATE INDEX idx_notification_destinataire ON NOTIFICATION(id_destinataire, date_creation DESC);
+
+-- Audit
+CREATE INDEX idx_audit_utilisateur ON AUDIT_LOG(id_utilisateur, timestamp_action DESC);
+CREATE INDEX idx_audit_table ON AUDIT_LOG(table_cible, timestamp_action);
