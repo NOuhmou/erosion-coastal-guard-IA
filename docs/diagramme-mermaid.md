@@ -1,15 +1,11 @@
+# Diagramme MCD - Erosion Coastal Guard
 
----
-title: MODÈLE CONCEPTUEL DE DONNÉES - EROSION COASTAL GUARD
----
-erDiagram
+Voici le Modèle Conceptuel de Données généré avec Mermaid.js.
 
 ```mermaid
-
-    %% ========== STYLES DES ENTITÉS ==========
-    %% Les couleurs aident à identifier les groupes fonctionnels
+erDiagram
+    %% ========== ENTITÉS PRINCIPALES ==========
     
-    %% Entités principales (bleu)
     ZONE_COTIERE {
         uuid id_zone PK
         string code UK
@@ -26,7 +22,6 @@ erDiagram
         timestamp updated_at
     }
     
-    %% Utilisateurs (orange)
     UTILISATEUR {
         uuid id_utilisateur PK
         string nom
@@ -42,7 +37,8 @@ erDiagram
         timestamp derniere_connexion
     }
     
-    %% Points et mesures (vert)
+    %% ========== POINTS ET MESURES ==========
+    
     POINT_MESURE {
         uuid id_point PK
         uuid id_zone FK
@@ -100,7 +96,8 @@ erDiagram
         timestamp created_at
     }
     
-    %% Historique (violet)
+    %% ========== HISTORIQUE ET ALERTES ==========
+    
     HISTORIQUE_CLASSIFICATION {
         uuid id_historique PK
         uuid id_zone FK
@@ -115,7 +112,6 @@ erDiagram
         enum type_declencheur
     }
     
-    %% Alertes (rouge)
     ALERTE {
         uuid id_alerte PK
         uuid id_zone FK
@@ -134,7 +130,8 @@ erDiagram
         boolean notif_protection_civile
     }
     
-    %% Parcelles et permis (marron)
+    %% ========== PARCELLES ET PERMIS ==========
+    
     PARCELLE {
         uuid id_parcelle PK
         string reference_cadastrale UK
@@ -172,7 +169,8 @@ erDiagram
         boolean etude_geotechnique_fournie
     }
     
-    %% Notifications et audit (gris)
+    %% ========== NOTIFICATIONS ET AUDIT ==========
+    
     NOTIFICATION {
         uuid id_notification PK
         uuid id_destinataire FK
@@ -218,7 +216,6 @@ erDiagram
         timestamp created_at
     }
     
-    %% Configuration (cyan)
     CONFIGURATION_SEUILS {
         uuid id_config PK
         string cle UK
@@ -234,42 +231,43 @@ erDiagram
     %% ========== RELATIONS ==========
     
     %% Relations ZONE_COTIERE
-    ZONE_COTIERE ||--o{ POINT_MESURE : "1---N  contient"
-    ZONE_COTIERE ||--o{ HISTORIQUE_CLASSIFICATION : "1---N  archive"
-    ZONE_COTIERE ||--o{ ALERTE : "1---N  génère"
-    ZONE_COTIERE ||--o{ RAPPORT : "1---N  documente"
-    ZONE_COTIERE ||--o{ PARCELLE : "1---N  inclut"
-    ZONE_COTIERE ||--o{ DEMANDE_PERMIS : "1---N  concerne"
-    ZONE_COTIERE }o--o{ UTILISATEUR : "0,1---0,N  assignée à"
+    ZONE_COTIERE ||--o{ POINT_MESURE : "contient (1-N)"
+    ZONE_COTIERE ||--o{ HISTORIQUE_CLASSIFICATION : "archive (1-N)"
+    ZONE_COTIERE ||--o{ ALERTE : "génère (1-N)"
+    ZONE_COTIERE ||--o{ RAPPORT : "documente (1-N)"
+    ZONE_COTIERE ||--o{ PARCELLE : "inclut (1-N)"
+    ZONE_COTIERE ||--o{ DEMANDE_PERMIS : "concerne (1-N)"
+    ZONE_COTIERE }o--o{ UTILISATEUR : "assignée à (0,1-0,N)"
     
     %% Relations POINT_MESURE
-    POINT_MESURE ||--o{ RELEVE_TERRAIN : "1---N  a pour relevés"
-    POINT_MESURE ||--o{ CALCUL_RECUL : "1---N  calcule"
+    POINT_MESURE ||--o{ RELEVE_TERRAIN : "a pour relevés (1-N)"
+    POINT_MESURE ||--o{ CALCUL_RECUL : "calcule (1-N)"
     
     %% Relations RELEVE_TERRAIN
-    RELEVE_TERRAIN ||--o{ PHOTO_RELEVE : "1---N  illustre"
-    RELEVE_TERRAIN ||--o{ CALCUL_RECUL : "1---N  utilisé comme"
-    RELEVE_TERRAIN }o--o{ ALERTE : "0,1---0,N  déclenche"
+    RELEVE_TERRAIN ||--o{ PHOTO_RELEVE : "illustre (1-N)"
+    RELEVE_TERRAIN ||--o{ CALCUL_RECUL : "utilisé dans (1-N)"
+    RELEVE_TERRAIN }o--o{ ALERTE : "déclenche (0,1-0,N)"
     
     %% Relations UTILISATEUR
-    UTILISATEUR ||--o{ RELEVE_TERRAIN : "1---N  saisit"
-    UTILISATEUR ||--o{ AUDIT_LOG : "1---N  trace"
-    UTILISATEUR ||--o{ NOTIFICATION : "1---N  reçoit"
-    UTILISATEUR ||--o{ DEMANDE_PERMIS : "1---N  dépose"
-    UTILISATEUR ||--o{ RAPPORT : "1---N  produit"
-    UTILISATEUR ||--o{ HISTORIQUE_CLASSIFICATION : "1---N  valide"
+    UTILISATEUR ||--o{ RELEVE_TERRAIN : "saisit (1-N)"
+    UTILISATEUR ||--o{ AUDIT_LOG : "trace (1-N)"
+    UTILISATEUR ||--o{ NOTIFICATION : "reçoit (1-N)"
+    UTILISATEUR ||--o{ DEMANDE_PERMIS : "dépose (1-N)"
+    UTILISATEUR ||--o{ RAPPORT : "produit (1-N)"
+    UTILISATEUR ||--o{ HISTORIQUE_CLASSIFICATION : "valide (1-N)"
     
     %% Relations PARCELLE
-    PARCELLE ||--o{ DEMANDE_PERMIS : "1---N  objet de"
+    PARCELLE ||--o{ DEMANDE_PERMIS : "objet de (1-N)"
     
     %% Relations ALERTE et DEMANDE
-    ALERTE ||--o{ NOTIFICATION : "1---N  notifie via"
-    DEMANDE_PERMIS ||--o{ NOTIFICATION : "1---N  notifie via"
+    ALERTE ||--o{ NOTIFICATION : "notifie via (1-N)"
+    DEMANDE_PERMIS ||--o{ NOTIFICATION : "notifie via (1-N)"
     
     %% Relations CONFIGURATION
-    CONFIGURATION_SEUILS }o--o{ UTILISATEUR : "0,1---0,N  modifiée par"
+    CONFIGURATION_SEUILS }o--o{ UTILISATEUR : "modifiée par (0,1-0,N)"
     
-    %% Relations spécifiques (doubles)
+    %% Relations spécifiques
     RELEVE_TERRAIN }o--|| UTILISATEUR : "validé par (expert)"
     RELEVE_TERRAIN }o--|| UTILISATEUR : "créé par (agent)"
     DEMANDE_PERMIS }o--|| UTILISATEUR : "instruit par (urbaniste)"
+ `Ajout diagramme Mermaid`
