@@ -232,53 +232,34 @@
 | ALERTE | (1,1) ──── (0,N) | NOTIFICATION | Une alerte génère des notifs |
 | DEMANDE_PERMIS | (1,1) ──── (0,N) | NOTIFICATION | Un permis génère des notifs |
 
+ 
 ---
 
-## 3. SCHÉMA ASCII
+## 4. CONTRAINTES PRINCIPALES
 
+### Contraintes CHECK
 
-┌──────────────────────────────────┐
-│ ZONE_COTIERE │
-│ #id_zone code classification │
-└──┬──────┬──────┬──────┬──────┬──┘
-│ │ │ │ │
-(1,N) │ │(1,N) │(1,N) │(1,N) │(1,N)
-┌─────────────┘ │ │ │ └─────────────┐
-▼ ▼ ▼ ▼ ▼
-┌────────────────┐ ┌──────────────┐ ┌──────────┐ ┌─────────────────┐
-│ POINT_MESURE │ │ ALERTE │ │ RAPPORT │ │ PARCELLE │
-│ #id_point │ │ #id_alerte │ │#id_rapport│ │ #id_parcelle │
-│ id_zone FK │ └──────┬───────┘ └──────────┘ │ id_zone FK │
-└──┬────────┬────┘ │(1,N) └────────┬────────┘
-│(1,N) │(1,N) ▼ │(1,N)
-│ │ ┌─────────────────┐ ▼
-▼ ▼ │ NOTIFICATION │ ┌──────────────────────┐
-┌──────────────┐ │ #id_notification│ │ DEMANDE_PERMIS │
-│ RELEVE │ │ id_alerte FK │◄────────────────│ #id_demande │
-│ TERRAIN │ │ id_demande FK │ │ id_parcelle FK │
-│ #id_releve │ └─────────────────┘ │ blocage_auto BOOL │
-│ id_point FK │ ▲ └──────────────────────┘
-│ id_agent FK │ │(1,N)
-└──┬───────────┘ │
-│(1,N) ┌───────────────────────────────────┐
-│ │ UTILISATEUR │
-▼ │ #id_utilisateur email role │
-┌──────────────┐ │ AGENT / EXPERT / URBANISTE ... │
-│ PHOTO_RELEVE │ └───────────────────────────────────┘
-│ #id_photo │ │ │
-│ id_releve FK │ (1,N) │ │ (1,N)
-└──────────────┘ ▼ ▼
-┌───────────┐ ┌─────────────────────────┐
-┌──────────────┐ │ AUDIT_LOG │ │ HISTORIQUE_CLASSIFICATION│
-│ CALCUL_RECUL │ │ #id_log │ │ #id_historique │
-│ #id_calcul │ │ APPEND │ │ id_zone FK │
-│ id_point FK │ │ ONLY !!! │ │ double validation expert │
-│ id_releve_t1 │ └───────────┘ └─────────────────────────┘
-│ id_releve_t2 │
-└──────────────┘ ┌────────────────────┐
-│ CONFIGURATION │
-│ SEUILS │
-│ SEUIL_VERT = 10m │
-│ SEUIL_ROUGE = 30m │
-│ DPM_LEGALE = 100m │
-└────────────────────┘
+```sql
+-- Auto-validation interdite
+CHECK (RELEVE_TERRAIN.id_agent != RELEVE_TERRAIN.id_validateur)
+
+-- Blocage automatique des permis
+CHECK (DEMANDE_PERMIS.blocage_automatique = TRUE
+       WHEN distance_trait_cote_m < 100 OR classification_zone_au_depot = 'ROUGE')
+
+-- Facteur de risque
+CHECK (ZONE_COTIERE.facteur_risque BETWEEN 1.0 AND 3.0)
+
+-- Distance positive
+CHECK (RELEVE_TERRAIN.distance_trait_cote > 0)
+
+-- Calcul recul
+CHECK (CALCUL_RECUL.id_releve_t1 != id_releve_t2)
+CHECK (CALCUL_RECUL.duree_jours > 0)
+
+-- Périodes valides
+CHECK (RAPPORT.periode_fin > periode_debut)
+
+-- Coordonnées GPS
+CHECK (POINT_MESURE.latitude BETWEEN -90 AND 90)
+CHECK (POINT_MESURE.longitude BETWEEN -180 AND 180)
