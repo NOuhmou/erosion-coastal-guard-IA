@@ -4,6 +4,8 @@ title: MODÈLE CONCEPTUEL DE DONNÉES - EROSION COASTAL GUARD
 ---
 erDiagram
 
+```mermaid
+
     %% ========== STYLES DES ENTITÉS ==========
     %% Les couleurs aident à identifier les groupes fonctionnels
     
