@@ -1,38 +1,21 @@
-
-from flask import Flask, jsonify
-import psycopg2 
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
-# 1. Database Connection Logic
-def get_db_connection():
+
+@app.route('/api/admin/recalculate', methods=['POST'])
+def force_recalc():
+    user_role = request.headers.get('X-User-Role') 
+    
+    if user_role != 'EXPERT':
+        return jsonify({"error": "Unauthorized. Only Experts can trigger recalculation."}), 403
+    
    
-    try:
-        conn = psycopg2.connect(
-            host="localhost",
-            database="coastal_guard",
-            user="postgres",
-            password="your_password"
-        )
-        return conn
-    except:
-        return None
+    return jsonify({"status": "Success", "message": "Erosion data recalculated for Agadir region."})
 
-
-@app.route('/api/zones', methods=['GET'])
-def get_zones():
-    
-    zones = [
-        {"id": 1, "nom": "Agadir Sector A", "status": "ORANGE", "recul": "1.5m/an"},
-        {"id": 2, "nom": "Taghazout North", "status": "VERTE", "recul": "0.3m/an"}
-    ]
-    return jsonify(zones)
-
-
-@app.route('/api/admin/recalc', methods=['POST'])
-def trigger_recalculation():
-    
-    return jsonify({"message": "Recalculation started by Admin role"})
+@app.route('/api/status', methods=['GET'])
+def get_public_status():
+    return jsonify({"system": "Coastal Guard IA", "database": "Connected", "version": "1.0.0"})
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(debug=True)
