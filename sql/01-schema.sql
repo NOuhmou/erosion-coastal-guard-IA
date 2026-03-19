@@ -55,3 +55,39 @@ BEGIN
     WHERE id_zone = target_zone_id;
 END;
 $$;
+
+-- Procedure: Calculate distance between two GPS points (in meters)
+CREATE OR REPLACE FUNCTION calculate_gps_distance(lat1 float, lon1 float, lat2 float, lon2 float) 
+RETURNS float AS $$
+DECLARE                                                                         
+    dist float = 0;          
+    rad_lat1 float; rad_lat2 float; theta float; rad_theta float;
+BEGIN                  
+    IF lat1 = lat2 AND lon1 = lon2 THEN RETURN 0; END IF;
+    rad_lat1 = pi() * lat1 / 180;
+    rad_lat2 = pi() * lat2 / 180;
+    theta = lon1 - lon2;
+    rad_theta = pi() * theta / 180;
+    dist = sin(rad_lat1) * sin(rad_lat2) + cos(rad_lat1) * cos(rad_lat2) * cos(rad_theta);
+    dist = acos(dist);
+    dist = dist * 180 / pi();
+    dist = dist * 60 * 1.1515 * 1.609344 * 1000; -- Convert to Meters
+    RETURN dist;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger: Log every change to a Zone's Risk Level
+CREATE OR REPLACE FUNCTION log_zone_changes()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF OLD.classification_actuelle <> NEW.classification_actuelle THEN
+        INSERT INTO HISTORIQUE_CLASSIFICATION (id_zone, classification_avant, classification_apres, date_changement, justification)
+        VALUES (NEW.id_zone, OLD.classification_actuelle, NEW.classification_actuelle, CURRENT_TIMESTAMP, 'Changement automatique par le système');
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_audit_zone_risk
+AFTER UPDATE ON ZONE_COTIERE
+FOR EACH ROW EXECUTE FUNCTION log_zone_changes();
