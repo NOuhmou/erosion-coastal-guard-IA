@@ -1,0 +1,476 @@
+/* ===== RESET & BASE ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+    background: #f4f7fc;
+    color: #1e293b;
+}
+
+/* ===== DASHBOARD LAYOUT ===== */
+.dashboard {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: 100vh;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+    background: linear-gradient(180deg, #0b2b3f 0%, #12455f 100%);
+    color: white;
+    padding: 1.8rem 1rem;
+    box-shadow: 4px 0 20px rgba(0,20,30,0.2);
+    position: relative;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 2.5rem;
+    padding-left: 0.5rem;
+}
+
+.logo-icon {
+    font-size: 2rem;
+    color: #6ec8e0;
+}
+
+.logo-text h2 {
+    font-weight: 500;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+    line-height: 1.2;
+}
+
+.logo-text span {
+    font-size: 0.75rem;
+    color: #b0e0f0;
+    opacity: 0.9;
+}
+
+.nav-menu {
+    margin-top: 2rem;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 0.9rem 1rem;
+    margin: 0.3rem 0;
+    border-radius: 14px;
+    transition: 0.2s;
+    cursor: default;
+    color: #d2eaf5;
+}
+
+.nav-item i {
+    width: 24px;
+    font-size: 1.2rem;
+}
+
+.nav-item.active {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    font-weight: 500;
+    backdrop-filter: blur(4px);
+    border-left: 4px solid #ffd966;
+}
+
+.nav-item:not(.active):hover {
+    background: rgba(255,255,255,0.05);
+}
+
+.sidebar-footer {
+    position: absolute;
+    bottom: 2rem;
+    width: 200px;
+    font-size: 0.8rem;
+    opacity: 0.6;
+    border-top: 1px solid #3a6d85;
+    padding-top: 1rem;
+    margin-top: 2rem;
+}
+
+/* ===== MAIN PANEL ===== */
+.main {
+    background: #f0f4f9;
+    padding: 1.8rem 2.2rem;
+    overflow-y: auto;
+}
+
+/* ----- TOP BAR ----- */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.page-title h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, #164863, #2b6c8f);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.page-title p {
+    color: #4b5f73;
+    margin-top: 4px;
+    font-size: 0.95rem;
+}
+
+.risk-badge {
+    background: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 40px;
+    box-shadow: 0 5px 12px rgba(0,0,0,0.04);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.risk-level {
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+.risk-level.orange {
+    color: #e68a2e;
+}
+
+/* ----- KPI CARDS ----- */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.kpi-card {
+    background: white;
+    border-radius: 28px;
+    padding: 1.5rem 1.2rem;
+    box-shadow: 0 12px 28px -8px rgba(20, 60, 80, 0.12);
+    transition: transform 0.15s;
+    border: 1px solid rgba(0,128,128,0.1);
+    backdrop-filter: blur(2px);
+}
+
+.kpi-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 30px -8px rgba(20, 60, 80, 0.18);
+}
+
+.kpi-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #5d738b;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+}
+
+.kpi-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #0b2b3f;
+}
+
+.kpi-unit {
+    font-size: 0.9rem;
+    color: #6e8ba2;
+    margin-left: 5px;
+    font-weight: 400;
+}
+
+.kpi-trend {
+    margin-top: 14px;
+}
+
+.trend-up {
+    color: #d97706;
+    background: #fef3e2;
+    padding: 4px 8px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    display: inline-block;
+}
+
+.trend-down {
+    color: #0e7b5e;
+    background: #e2f3ee;
+    padding: 4px 8px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    display: inline-block;
+}
+
+/* ----- MAP SECTION ----- */
+.map-section {
+    background: white;
+    border-radius: 28px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 25px -10px rgba(0,0,0,0.1);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.section-header h3 {
+    font-weight: 600;
+    color: #1b4056;
+    font-size: 1.3rem;
+}
+
+.section-header h3 i {
+    margin-right: 10px;
+}
+
+.legend {
+    display: flex;
+    gap: 20px;
+    font-size: 0.85rem;
+}
+
+.legend-color {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 20px;
+    margin-right: 6px;
+}
+
+#coastMap {
+    height: 300px;
+    width: 100%;
+    border-radius: 24px;
+    z-index: 1;
+    border: 2px solid #deecf3;
+}
+
+/* ----- CHARTS ROW ----- */
+.charts-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.8rem;
+    margin-bottom: 2.2rem;
+}
+
+.chart-card {
+    background: white;
+    border-radius: 28px;
+    padding: 1.5rem 1.5rem 1.8rem;
+    box-shadow: 0 8px 24px rgba(0, 40, 50, 0.06);
+}
+
+.chart-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: #1e4057;
+    margin-bottom: 1rem;
+}
+
+.chart-icon-blue {
+    color: #256c8c;
+}
+
+.chart-icon-orange {
+    color: #b85b1a;
+}
+
+.chart-legend {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    margin-top: 12px;
+    font-size: 0.8rem;
+    color: #406e88;
+}
+
+canvas {
+    max-height: 220px;
+    width: 100% !important;
+}
+
+/* ----- RISK TABLE ----- */
+.risk-table-container {
+    background: white;
+    border-radius: 28px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 22px -8px rgba(30,50,70,0.1);
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+th {
+    text-align: left;
+    padding: 1rem 0.5rem 0.8rem 0.5rem;
+    color: #5a748b;
+    font-weight: 500;
+    font-size: 0.8rem;
+    border-bottom: 1px solid #dde7f0;
+}
+
+td {
+    padding: 1rem 0.5rem;
+    border-bottom: 1px solid #eaf0f6;
+    font-weight: 500;
+}
+
+.zone-tag {
+    background: #fee2e2;
+    color: #b91c1c;
+    padding: 0.25rem 1rem;
+    border-radius: 40px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.zone-tag.orange {
+    background: #ffedd5;
+    color: #9a3412;
+}
+
+.zone-tag.green {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.action-btn {
+    background: none;
+    border: 1px solid #cbd5e1;
+    padding: 0.3rem 1rem;
+    border-radius: 30px;
+    color: #2c5777;
+    font-weight: 500;
+    font-size: 0.75rem;
+    cursor: default;
+}
+
+.action-btn i {
+    margin-right: 4px;
+}
+
+.alert-info {
+    margin-top: 20px;
+    background: #ebf4fa;
+    border-radius: 18px;
+    padding: 0.8rem 1.2rem;
+    font-size: 0.9rem;
+}
+
+.alert-info i {
+    color: #0b577d;
+    margin-right: 8px;
+}
+
+/* ----- FOOTER ----- */
+.footer-note {
+    margin-top: 2rem;
+    text-align: right;
+    color: #8a9db0;
+    font-size: 0.85rem;
+    border-top: 1px dashed #b9d0df;
+    padding-top: 1.5rem;
+}
+
+.footer-note i.fa-code-branch {
+    background: #d4e2ed;
+    padding: 4px 6px;
+    border-radius: 40px;
+    margin-left: 4px;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media screen and (max-width: 1200px) {
+    .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .dashboard {
+        grid-template-columns: 220px 1fr;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .dashboard {
+        grid-template-columns: 1fr;
+    }
+    
+    .sidebar {
+        display: none;
+    }
+    
+    .charts-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .top-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .risk-badge {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .main {
+        padding: 1rem;
+    }
+    
+    .kpi-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .page-title h1 {
+        font-size: 1.5rem;
+    }
+}
+
+/* ===== UTILITIES ===== */
+.text-center {
+    text-align: center;
+}
+
+.mt-2 {
+    margin-top: 1rem;
+}
+
+.mb-2 {
+    margin-bottom: 1rem;
+}
