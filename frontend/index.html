@@ -1,1 +1,275 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erosion-Coastal Guard · Souss-Massa Resilience 2026</title>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Chart.js for graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <!-- Leaflet for maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- SIDEBAR (left) -->
+        <aside class="sidebar">
+            <div class="logo-area">
+                <i class="fas fa-shield-halved logo-icon"></i>
+                <div class="logo-text">
+                    <h2>EROSION<br>COASTAL GUARD</h2>
+                    <span>Souss-Massa 2026</span>
+                </div>
+            </div>
 
+            <nav class="nav-menu">
+                <div class="nav-item active">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-map"></i>
+                    <span>Littoral map</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-history"></i>
+                    <span>Historical data</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Risk zones</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-file-shield"></i>
+                    <span>Audit reports</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-robot"></i>
+                    <span>IA comparison</span>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <i class="fas fa-circle-nodes"></i> prototype v0.6<br> équipe IA · Architects & Augmentés
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT (right) -->
+        <main class="main">
+            <!-- TOP BAR -->
+            <div class="top-bar">
+                <div class="page-title">
+                    <h1>Surveillance du trait de côte</h1>
+                    <p>
+                        <i class="fas fa-location-dot" style="margin-right: 6px;"></i>
+                        Agadir · Taghazout · mise à jour 12 Mars 2026
+                    </p>
+                </div>
+                <div class="risk-badge">
+                    <i class="fas fa-triangle-exclamation"></i>
+                    <span>Niveau d'alerte érosion</span>
+                    <span class="risk-level orange">MODÉRÉ</span>
+                </div>
+            </div>
+
+            <!-- KPI CARDS -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span>Recul annuel moyen</span>
+                        <i class="fas fa-arrow-trend-down"></i>
+                    </div>
+                    <div class="kpi-value">
+                        1.84 <span class="kpi-unit">m/an</span>
+                    </div>
+                    <div class="kpi-trend">
+                        <span class="trend-up">
+                            <i class="fas fa-angle-up"></i> +0.23 m vs 2025
+                        </span>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span>Zone rouge (critique)</span>
+                        <i class="fas fa-skull-crosswalk"></i>
+                    </div>
+                    <div class="kpi-value">
+                        4.2 <span class="kpi-unit">km</span>
+                    </div>
+                    <div class="kpi-trend">
+                        <span class="trend-up">
+                            +0.7 km depuis 2024
+                        </span>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span>Points de suivi GPS</span>
+                        <i class="fas fa-satellite-dish"></i>
+                    </div>
+                    <div class="kpi-value">
+                        156
+                    </div>
+                    <div class="kpi-trend">
+                        <span class="trend-down">
+                            3 stations neuves
+                        </span>
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span>Zones non constructibles</span>
+                        <i class="fas fa-ban"></i>
+                    </div>
+                    <div class="kpi-value">
+                        12
+                    </div>
+                    <div class="kpi-trend">
+                        dont 3 nouvelles en 2026
+                    </div>
+                </div>
+            </div>
+
+            <!-- MAP SECTION -->
+            <section class="map-section">
+                <div class="section-header">
+                    <h3>
+                        <i class="fas fa-map-location-dot"></i>
+                        Littoral Agadir – Taghazout · évolution 2016–2026
+                    </h3>
+                    <div class="legend">
+                        <span>
+                            <span class="legend-color" style="background:#0066b3;"></span> 
+                            trait 2016
+                        </span>
+                        <span>
+                            <span class="legend-color" style="background:#ffaa33;"></span> 
+                            trait 2021
+                        </span>
+                        <span>
+                            <span class="legend-color" style="background:#d62728;"></span> 
+                            trait 2026
+                        </span>
+                    </div>
+                </div>
+                <div id="coastMap"></div>
+            </section>
+
+            <!-- CHARTS ROW -->
+            <div class="charts-row">
+                <!-- Bar chart: erosion per sector -->
+                <div class="chart-card">
+                    <div class="chart-title">
+                        <i class="fas fa-chart-simple chart-icon-blue"></i> 
+                        Recul annuel par secteur (m)
+                    </div>
+                    <canvas id="erosionSectorChart"></canvas>
+                    <div class="chart-legend">
+                        <span><i class="fas fa-circle" style="color:#2b6c8f;"></i> 2025</span>
+                        <span><i class="fas fa-circle" style="color:#e68a2e;"></i> 2026 (proj.)</span>
+                    </div>
+                </div>
+
+                <!-- Line chart: historical coastline retreat -->
+                <div class="chart-card">
+                    <div class="chart-title">
+                        <i class="fas fa-chart-line chart-icon-orange"></i> 
+                        Historique du recul (m) – zone Agadir sud
+                    </div>
+                    <canvas id="historyLineChart"></canvas>
+                </div>
+            </div>
+
+            <!-- RISK ZONES TABLE -->
+            <section class="risk-table-container">
+                <div class="section-header">
+                    <h3>
+                        <i class="fas fa-table-list"></i>
+                        Zones de vigilance & interdiction de construire
+                    </h3>
+                    <span class="action-btn">
+                        <i class="fas fa-rotate"></i> mis à jour par trigger #03
+                    </span>
+                </div>
+                
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Zone</th>
+                                <th>Coordonnées (approx)</th>
+                                <th>Recul 2025 (m)</th>
+                                <th>Statut</th>
+                                <th>Interdiction</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Plage d'Agadir (centre)</td>
+                                <td>30.421, -9.618</td>
+                                <td>2.3 m</td>
+                                <td><span class="zone-tag">Rouge</span></td>
+                                <td><i class="fas fa-ban" style="color:#b91c1c;"></i> totale</td>
+                            </tr>
+                            <tr>
+                                <td>Taghazout bay nord</td>
+                                <td>30.542, -9.702</td>
+                                <td>1.9 m</td>
+                                <td><span class="zone-tag orange">Orange</span></td>
+                                <td>restreinte</td>
+                            </tr>
+                            <tr>
+                                <td>Cap Ghir</td>
+                                <td>30.632, -9.891</td>
+                                <td>0.7 m</td>
+                                <td><span class="zone-tag green">Vert</span></td>
+                                <td>aucune</td>
+                            </tr>
+                            <tr>
+                                <td>Anza plage</td>
+                                <td>30.440, -9.647</td>
+                                <td>2.1 m</td>
+                                <td><span class="zone-tag orange">Orange</span></td>
+                                <td>restreinte</td>
+                            </tr>
+                            <tr>
+                                <td>Oued Souss embouchure</td>
+                                <td>30.367, -9.583</td>
+                                <td>3.2 m</td>
+                                <td><span class="zone-tag">Rouge</span></td>
+                                <td><i class="fas fa-ban" style="color:#b91c1c;"></i> totale</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="alert-info">
+                    <i class="fas fa-circle-info"></i> 
+                    Alerte trigger : nouvelle zone rouge détectée à Anza si recul > 2.0m en 2026.
+                </div>
+            </section>
+
+            <!-- FOOTER : IA transparency note -->
+            <div class="footer-note">
+                ⚡ Prompt du 10/03 : "Générer une carte avec superposition des traits de côte 2016–2026 pour Agadir" 
+                – résultat après correction (hallucination de coordonnées corrigée) · 
+                <i class="fas fa-code-branch"></i> Architects vs Augmented
+            </div>
+        </main>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
