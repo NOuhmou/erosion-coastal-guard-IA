@@ -474,3 +474,45 @@ td {
 .mb-2 {
     margin-bottom: 1rem;
 }
+
+/* ===== PAGE NAVIGATION ===== */
+.page-content {
+    display: none;
+}
+
+.page-content.active {
+    display: block;
+}
+
+.nav-item {
+    cursor: pointer;
+}
+
+/* Carte plein écran */
+#fullscreenMap {
+    height: 500px;
+    width: 100%;
+    border-radius: 24px;
+    border: 2px solid #deecf3;
+}
+
+/* Tableaux supplémentaires */
+#historical-table th, #risk-table-full th, #audit-table th {
+    background: #f8fafc;
+}
+
+/* Animation de transition */
+.page-content {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
