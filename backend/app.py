@@ -1,18 +1,18 @@
 import pymysql
 from flask import Flask, jsonify, request
-from flask_cors import CORS  # ← IMPORTANT
+from flask_cors import CORS
 from datetime import datetime
 import uuid
 
 app = Flask(__name__)
-CORS(app)  # ← IMPORTANT - Autorise toutes les origines
+CORS(app)
 
 # Configuration MySQL
 DB_CONFIG = {
     "host": "localhost",
     "database": "coastal_guard",
     "user": "root",
-    "password": "",  # Votre mot de passe MySQL
+    "password": "",  # Mets ton mot de passe MySQL ici
     "port": 3306
 }
 
@@ -31,6 +31,7 @@ def get_db_connection():
         print(f"Database connection error: {e}")
         return None
 
+# ===== STATUS =====
 @app.route('/api/status', methods=['GET'])
 def get_status():
     conn = get_db_connection()
@@ -43,6 +44,7 @@ def get_status():
         "timestamp": datetime.now().isoformat()
     })
 
+# ===== KPI =====
 @app.route('/api/kpi', methods=['GET'])
 def get_kpi():
     conn = get_db_connection()
@@ -74,6 +76,7 @@ def get_kpi():
     finally:
         conn.close()
 
+# ===== GRAPHIQUES =====
 @app.route('/api/graphiques', methods=['GET'])
 def get_graphiques():
     conn = get_db_connection()
@@ -103,6 +106,7 @@ def get_graphiques():
     finally:
         conn.close()
 
+# ===== ZONES RISQUE =====
 @app.route('/api/zones-risque', methods=['GET'])
 def get_zones_risque():
     conn = get_db_connection()
@@ -139,6 +143,7 @@ def get_zones_risque():
     finally:
         conn.close()
 
+# ===== POINTS CARTE =====
 @app.route('/api/points-carte', methods=['GET'])
 def get_points_carte():
     conn = get_db_connection()
@@ -175,5 +180,91 @@ def get_points_carte():
     finally:
         conn.close()
 
+# ===== AGENTS =====
+@app.route('/api/agents', methods=['GET'])
+def get_agents():
+    conn = get_db_connection()
+    if not conn:
+        return jsonify({"error": "Database connection failed"}), 500
+    try:
+        with conn.cursor() as cur:
+            cur.execute("""
+                SELECT id_utilisateur, nom, prenom, role 
+                FROM UTILISATEUR 
+                WHERE role IN ('AGENT', 'ADMIN') AND actif = TRUE
+            """)
+            agents = cur.fetchall()
+        return jsonify(agents)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
+
+# ===== AJOUTER RELEVE =====
+@app.route('/api/releves', methods=['POST'])
+def add_releve():
+    conn = get_db_connection()
+    if not conn:
+        return jsonify({"error": "Database connection failed"}), 500
+    try:
+        data = request.get_json()
+        releve_id = str(uuid.uuid4())
+        
+        with conn.cursor() as cur:
+            cur.execute("""
+                INSERT INTO RELEVE_TERRAIN (id_releve, id_point, id_agent, date_mesure, distance_trait_cote, methode_mesure, statut_validation)
+                VALUES (%s, %s, %s, %s, %s, %s, 'EN_ATTENTE')
+            """, (releve_id, data['id_point'], data['id_agent'], data['date_mesure'], data['distance_trait_cote'], data['methode_mesure']))
+            conn.commit()
+            
+            # Recalculer les statistiques de la zone
+            cur.execute("SELECT id_zone FROM POINT_MESURE WHERE id_point = %s", (data['id_point'],))
+            zone = cur.fetchone()
+            if zone:
+                cur.execute(f"CALL calculate_erosion_stats('{zone['id_zone']}')")
+                conn.commit()
+        
+        return jsonify({"message": "Relevé ajouté avec succès", "id": releve_id}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
+
+# ===== LISTE RELEVES =====
+@app.route('/api/releves', methods=['GET'])
+def get_releves():
+    conn = get_db_connection()
+    if not conn:
+        return jsonify({"error": "Database connection failed"}), 500
+    try:
+        limit = request.args.get('limit', 10, type=int)
+        
+        with conn.cursor() as cur:
+            cur.execute("""
+                SELECT 
+                    r.id_releve,
+                    r.id_point,
+                    p.code_point as point_name,
+                    r.distance_trait_cote,
+                    r.date_mesure,
+                    r.statut_validation,
+                    r.methode_mesure,
+                    u.prenom,
+                    u.nom
+                FROM RELEVE_TERRAIN r
+                JOIN POINT_MESURE p ON r.id_point = p.id_point
+                LEFT JOIN UTILISATEUR u ON r.id_agent = u.id_utilisateur
+                ORDER BY r.date_mesure DESC
+                LIMIT %s
+            """, (limit,))
+            releves = cur.fetchall()
+        
+        return jsonify(releves)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        conn.close()
+
+# ===== LANCEMENT DU SERVEUR =====
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
