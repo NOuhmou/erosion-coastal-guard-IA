@@ -220,7 +220,9 @@ async function fetchHistoricalData() {
 
 async function fetchAuditHistory() {
   try {
-    const response = await fetch(`${API_BASE_URL}/classification-history?limit=50`);
+    const response = await fetch(
+      `${API_BASE_URL}/classification-history?limit=50`,
+    );
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const rows = await response.json();
     updateAuditTable(rows);
