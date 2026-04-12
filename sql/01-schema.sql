@@ -99,6 +99,7 @@ CREATE TABLE DEMANDE_PERMIS (
     date_depot TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     distance_trait_cote_m DECIMAL(8,2),
     blocage_automatique BOOLEAN DEFAULT FALSE,
+    etude_geotechnique_requise BOOLEAN DEFAULT FALSE,
     motif_blocage TEXT,
     FOREIGN KEY (id_demandeur) REFERENCES UTILISATEUR(id_utilisateur),
     FOREIGN KEY (id_zone) REFERENCES ZONE_COTIERE(id_zone),

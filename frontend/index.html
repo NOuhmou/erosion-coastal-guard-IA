@@ -1,277 +1,576 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Erosion-Coastal Guard · Souss-Massa Resilience 2026</title>
-    
+
     <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+
     <!-- Chart.js for graphs -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    
+
     <!-- Leaflet for maps -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    
+
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
     <div class="dashboard">
-        <!-- SIDEBAR (left) -->
-        <aside class="sidebar">
-            <div class="logo-area">
-                <i class="fas fa-shield-halved logo-icon"></i>
-                <div class="logo-text">
-                    <h2>EROSION<br>COASTAL GUARD</h2>
-                    <span>Souss-Massa 2026</span>
+      <!-- SIDEBAR (left) -->
+      <aside class="sidebar">
+        <div class="logo-area">
+          <i class="fas fa-shield-halved logo-icon"></i>
+          <div class="logo-text">
+            <h2>EROSION<br />COASTAL GUARD</h2>
+            <span>Souss-Massa 2026</span>
+          </div>
+        </div>
+
+        <nav class="nav-menu">
+          <div class="nav-item active" data-page="dashboard">
+            <i class="fas fa-chart-line"></i>
+            <span>Dashboard</span>
+          </div>
+          <div class="nav-item" data-page="littoral">
+            <i class="fas fa-map"></i>
+            <span>Littoral map</span>
+          </div>
+          <div class="nav-item" data-page="historical">
+            <i class="fas fa-history"></i>
+            <span>Historical data</span>
+          </div>
+          <div class="nav-item" data-page="riskzones">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>Risk zones</span>
+          </div>
+          <div class="nav-item" data-page="audit">
+            <i class="fas fa-clipboard-list"></i>
+            <span>Audit reports</span>
+          </div>
+          <div class="nav-item" data-page="dataentry">
+            <i class="fas fa-pen-ruler"></i>
+            <span>Saisie terrain</span>
+          </div>
+        </nav>
+
+        <div class="sidebar-footer">
+          <i class="fas fa-circle-nodes"></i> prototype v0.6<br />
+          équipe IA · Architects & Augmentés
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT (right) -->
+      <main class="main">
+        <!-- PAGE 1: DASHBOARD -->
+        <div id="page-dashboard" class="page-content active">
+          <div class="top-bar">
+            <div class="page-title">
+              <h1>Surveillance du trait de côte</h1>
+              <p>
+                <i class="fas fa-location-dot" style="margin-right: 6px"></i
+                >Agadir · Taghazout · mise à jour 12 Mars 2026
+              </p>
+            </div>
+            <div class="risk-badge">
+              <i class="fas fa-triangle-exclamation"></i>
+              <span>Niveau d'alerte érosion</span>
+              <span class="risk-level orange">MODÉRÉ</span>
+            </div>
+          </div>
+
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span>Recul annuel moyen</span
+                ><i class="fas fa-arrow-trend-down"></i>
+              </div>
+              <div class="kpi-value">
+                1.84 <span class="kpi-unit">m/an</span>
+              </div>
+              <div class="kpi-trend">
+                <span class="trend-up"
+                  ><i class="fas fa-angle-up"></i> +0.23 m vs 2025</span
+                >
+              </div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span>Zone rouge (critique)</span
+                ><i class="fas fa-skull-crosswalk"></i>
+              </div>
+              <div class="kpi-value">4.2 <span class="kpi-unit">km</span></div>
+              <div class="kpi-trend">
+                <span class="trend-up">+0.7 km depuis 2024</span>
+              </div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span>Points de suivi GPS</span
+                ><i class="fas fa-satellite-dish"></i>
+              </div>
+              <div class="kpi-value">156</div>
+              <div class="kpi-trend">
+                <span class="trend-down">3 stations neuves</span>
+              </div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span>Zones non constructibles</span><i class="fas fa-ban"></i>
+              </div>
+              <div class="kpi-value">12</div>
+              <div class="kpi-trend">dont 3 nouvelles en 2026</div>
+            </div>
+          </div>
+
+          <section class="map-section">
+            <div class="section-header">
+              <h3>
+                <i class="fas fa-map-location-dot"></i>Littoral Agadir –
+                Taghazout · évolution 2016–2026
+              </h3>
+              <div class="legend">
+                <span
+                  ><span class="legend-color" style="background: #0066b3"></span
+                  >trait 2016</span
+                >
+                <span
+                  ><span class="legend-color" style="background: #ffaa33"></span
+                  >trait 2021</span
+                >
+                <span
+                  ><span class="legend-color" style="background: #d62728"></span
+                  >trait 2026</span
+                >
+              </div>
+            </div>
+            <div id="coastMap"></div>
+          </section>
+
+          <div class="charts-row">
+            <div class="chart-card">
+              <div class="chart-title">
+                <i class="fas fa-chart-simple chart-icon-blue"></i>Recul annuel
+                par secteur (m)
+              </div>
+              <canvas id="erosionSectorChart"></canvas>
+              <div class="chart-legend">
+                <span
+                  ><i class="fas fa-circle" style="color: #2b6c8f"></i>Recul
+                  actuel</span
+                >
+              </div>
+            </div>
+            <div class="chart-card">
+              <div class="chart-title">
+                <i class="fas fa-chart-line chart-icon-orange"></i>Historique du
+                recul (m) – zone Agadir sud
+              </div>
+              <canvas id="historyLineChart"></canvas>
+            </div>
+          </div>
+
+          <section class="risk-table-container">
+            <div class="section-header">
+              <h3>
+                <i class="fas fa-table-list"></i>Zones de vigilance &
+                interdiction de construire
+              </h3>
+              <span class="action-btn"
+                ><i class="fas fa-rotate"></i>mis à jour par trigger</span
+              >
+            </div>
+            <div class="table-responsive">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Zone</th>
+                    <th>Coordonnées</th>
+                    <th>Recul (m/an)</th>
+                    <th>Statut</th>
+                    <th>Interdiction</th>
+                  </tr>
+                </thead>
+                <tbody id="riskTableBody"></tbody>
+              </table>
+            </div>
+            <div class="alert-info">
+              <i class="fas fa-circle-info"></i>Les zones Rouges sont totalement
+              interdites à la construction.
+            </div>
+          </section>
+        </div>
+
+        <!-- PAGE 2: LITTORAL MAP -->
+        <div id="page-littoral" class="page-content">
+          <div class="top-bar">
+            <div class="page-title">
+              <h1>Carte du Littoral</h1>
+              <p>Visualisation interactive des points de suivi</p>
+            </div>
+          </div>
+          <section class="map-section">
+            <div class="section-header">
+              <h3><i class="fas fa-map-marked-alt"></i>Points de mesure GPS</h3>
+            </div>
+            <div
+              id="fullscreenMap"
+              style="height: 500px; width: 100%; border-radius: 24px"
+            ></div>
+          </section>
+          <div class="footer-note">
+            Carte interactive des points GPS · cliquer sur un point pour voir
+            les détails
+          </div>
+        </div>
+
+        <!-- PAGE 3: HISTORICAL DATA -->
+        <div id="page-historical" class="page-content">
+          <div class="top-bar">
+            <div class="page-title">
+              <h1>Données Historiques</h1>
+              <p>Évolution du recul sur les 10 dernières années</p>
+            </div>
+          </div>
+          <div class="charts-row">
+            <div class="chart-card" style="grid-column: span 2">
+              <div class="chart-title">
+                <i class="fas fa-chart-line chart-icon-orange"></i>Évolution du
+                recul cumulé
+              </div>
+              <canvas id="historyChartFull" style="height: 350px"></canvas>
+            </div>
+          </div>
+          <div class="risk-table-container">
+            <div class="section-header">
+              <h3><i class="fas fa-calendar-alt"></i>Relevés par année</h3>
+            </div>
+            <div class="table-responsive">
+              <table id="historical-table">
+                <thead>
+                  <tr>
+                    <th>Zone</th>
+                    <th>Année</th>
+                    <th>Recul (m)</th>
+                    <th>Classification</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="footer-note">
+            Données historiques basées sur les relevés terrain depuis 2016
+          </div>
+        </div>
+
+        <!-- PAGE 4: RISK ZONES -->
+        <div id="page-riskzones" class="page-content">
+          <div class="top-bar">
+            <div class="page-title">
+              <h1>Zones à Risque</h1>
+              <p>Classification et restrictions de construction</p>
+            </div>
+          </div>
+          <div class="risk-table-container">
+            <div class="section-header">
+              <h3>
+                <i class="fas fa-exclamation-triangle"></i>Zones de vigilance
+              </h3>
+            </div>
+            <div class="table-responsive">
+              <table id="risk-table-full">
+                <thead>
+                  <tr>
+                    <th>Zone</th>
+                    <th>Coordonnées</th>
+                    <th>Recul (m/an)</th>
+                    <th>Statut</th>
+                    <th>Constructibilité</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="footer-note">
+            Classification automatique basée sur le recul annuel moyen
+          </div>
+        </div>
+
+        <!-- PAGE 5: AUDIT REPORTS -->
+        <div id="page-audit" class="page-content">
+          <div class="top-bar">
+            <div class="page-title">
+              <h1>Rapports d'Audit</h1>
+              <p>Journal des modifications et alertes système</p>
+            </div>
+          </div>
+          <div class="risk-table-container">
+            <div class="section-header">
+              <h3>
+                <i class="fas fa-history"></i>Historique des changements de
+                classification
+              </h3>
+            </div>
+            <div class="table-responsive">
+              <table id="audit-table">
+                <thead>
+                  <tr>
+                    <th>Zone</th>
+                    <th>Classification avant</th>
+                    <th>Classification après</th>
+                    <th>Date</th>
+                    <th>Justification</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td colspan="5" style="text-align: center">
+                      Chargement des données...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="footer-note">
+            Chaque changement de classification est automatiquement journalisé
+          </div>
+        </div>
+
+        <!-- PAGE 6: SAISIE TERRAIN -->
+        <div id="page-dataentry" class="page-content">
+          <div class="top-bar">
+            <div class="page-title">
+              <h1>
+                <i class="fas fa-pen-ruler"></i> Saisie des relevés terrain
+              </h1>
+              <p>
+                Ajouter de nouvelles mesures GPS pour mettre à jour les analyses
+                en temps réel
+              </p>
+            </div>
+            <div class="risk-badge">
+              <i class="fas fa-user-check"></i>
+              <span>Rôle : Agent terrain</span>
+              <span class="risk-level" style="color: #2b6c8f">EXPERT</span>
+            </div>
+          </div>
+
+          <div class="charts-row">
+            <div class="chart-card">
+              <div class="chart-title">
+                <i class="fas fa-map-marker-alt chart-icon-blue"></i>Nouveau
+                relevé GPS
+              </div>
+              <form id="releveForm">
+                <div style="margin-bottom: 20px">
+                  <label
+                    style="
+                      display: block;
+                      margin-bottom: 8px;
+                      font-weight: 600;
+                      color: #1e4057;
+                    "
+                    ><i class="fas fa-map-pin"></i> Point de mesure *</label
+                  >
+                  <select
+                    id="id_point"
+                    required
+                    style="
+                      width: 100%;
+                      padding: 12px;
+                      border-radius: 12px;
+                      border: 1px solid #cbd5e1;
+                    "
+                  >
+                    <option value="">-- Sélectionner un point GPS --</option>
+                  </select>
+                  <small style="color: #6e8ba2"
+                    >Sélectionnez le point fixe où la mesure a été prise</small
+                  >
                 </div>
+                <div style="margin-bottom: 20px">
+                  <label
+                    style="
+                      display: block;
+                      margin-bottom: 8px;
+                      font-weight: 600;
+                      color: #1e4057;
+                    "
+                    ><i class="fas fa-sliders"></i> Type de saisie *</label
+                  >
+                  <select
+                    id="measurement_type"
+                    style="
+                      width: 100%;
+                      padding: 12px;
+                      border-radius: 12px;
+                      border: 1px solid #cbd5e1;
+                    "
+                  >
+                    <option value="DISTANCE">Distance au trait de côte</option>
+                    <option value="RECUL">
+                      Recul observé depuis la dernière mesure
+                    </option>
+                  </select>
+                  <small id="measurement_help" style="color: #6e8ba2"
+                    >Mode distance: saisir la distance totale mesurée depuis le
+                    point fixe.</small
+                  >
+                </div>
+                <div style="margin-bottom: 20px">
+                  <label
+                    style="
+                      display: block;
+                      margin-bottom: 8px;
+                      font-weight: 600;
+                      color: #1e4057;
+                    "
+                    ><i class="fas fa-ruler"></i> Distance au trait de côte
+                    (mètres) *</label
+                  >
+                  <input
+                    type="number"
+                    id="distance"
+                    step="0.1"
+                    required
+                    style="
+                      width: 100%;
+                      padding: 12px;
+                      border-radius: 12px;
+                      border: 1px solid #cbd5e1;
+                    "
+                  />
+                  <small id="distance_help" style="color: #6e8ba2"
+                    >Distance mesurée depuis le point fixe jusqu'au bord de
+                    mer</small
+                  >
+                </div>
+                <div style="margin-bottom: 20px">
+                  <label
+                    style="
+                      display: block;
+                      margin-bottom: 8px;
+                      font-weight: 600;
+                      color: #1e4057;
+                    "
+                    ><i class="fas fa-microchip"></i> Méthode de mesure</label
+                  >
+                  <select
+                    id="methode"
+                    style="
+                      width: 100%;
+                      padding: 12px;
+                      border-radius: 12px;
+                      border: 1px solid #cbd5e1;
+                    "
+                  >
+                    <option value="GPS_DGPS">
+                      📡 GPS différentiel (précision cm)
+                    </option>
+                    <option value="DRONE">🛸 Drone / Photogrammétrie</option>
+                    <option value="SATELLITE">🛰️ Imagerie satellite</option>
+                    <option value="JALONNEMENT">📏 Jalonnement terrain</option>
+                  </select>
+                </div>
+                <div style="margin-bottom: 20px">
+                  <label
+                    style="
+                      display: block;
+                      margin-bottom: 8px;
+                      font-weight: 600;
+                      color: #1e4057;
+                    "
+                    ><i class="fas fa-user"></i> Agent terrain</label
+                  >
+                  <select
+                    id="id_agent"
+                    style="
+                      width: 100%;
+                      padding: 12px;
+                      border-radius: 12px;
+                      border: 1px solid #cbd5e1;
+                    "
+                  >
+                    <option value="">-- Sélectionner l'agent --</option>
+                  </select>
+                  <small style="color: #6e8ba2"
+                    >L'agent qui a effectué la mesure sur le terrain</small
+                  >
+                </div>
+                <button
+                  type="submit"
+                  style="
+                    background: linear-gradient(135deg, #2b6c8f, #164863);
+                    color: white;
+                    padding: 14px 24px;
+                    border: none;
+                    border-radius: 30px;
+                    cursor: pointer;
+                    width: 100%;
+                    font-weight: bold;
+                    font-size: 16px;
+                  "
+                >
+                  <i class="fas fa-save"></i> Enregistrer le relevé
+                </button>
+              </form>
             </div>
 
-            <nav class="nav-menu">
-                <div class="nav-item active" data-page="dashboard">
-                    <i class="fas fa-chart-line"></i>
-                    <span>Dashboard</span>
-                </div>
-                <div class="nav-item" data-page="littoral">
-                    <i class="fas fa-map"></i>
-                    <span>Littoral map</span>
-                </div>
-                <div class="nav-item" data-page="historical">
-                    <i class="fas fa-history"></i>
-                    <span>Historical data</span>
-                </div>
-                <div class="nav-item" data-page="riskzones">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <span>Risk zones</span>
-                </div>
-                <div class="nav-item" data-page="audit">
-                    <i class="fas fa-file-shield"></i>
-                    <span>Audit reports</span>
-                </div>
-                <div class="nav-item" data-page="dataentry">
-                    <i class="fas fa-pen-ruler"></i>
-                    <span>Saisie terrain</span>
-                </div>
-            </nav>
-
-            <div class="sidebar-footer">
-                <i class="fas fa-circle-nodes"></i> prototype v0.6<br> équipe IA · Architects & Augmentés
+            <div class="chart-card">
+              <div class="chart-title">
+                <i class="fas fa-history chart-icon-orange"></i>Derniers relevés
+                enregistrés
+              </div>
+              <div
+                class="table-responsive"
+                style="max-height: 350px; overflow-y: auto"
+              >
+                <table id="lastRelevesTable" style="width: 100%">
+                  <thead>
+                    <tr style="background: #f8fafc">
+                      <th>Point</th>
+                      <th>Distance</th>
+                      <th>Date</th>
+                      <th>Statut</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td colspan="4" style="text-align: center">
+                        Chargement...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
-        </aside>
+          </div>
 
-        <!-- MAIN CONTENT (right) -->
-        <main class="main">
-            <!-- PAGE 1: DASHBOARD -->
-            <div id="page-dashboard" class="page-content active">
-                <div class="top-bar">
-                    <div class="page-title">
-                        <h1>Surveillance du trait de côte</h1>
-                        <p><i class="fas fa-location-dot" style="margin-right: 6px;"></i>Agadir · Taghazout · mise à jour 12 Mars 2026</p>
-                    </div>
-                    <div class="risk-badge">
-                        <i class="fas fa-triangle-exclamation"></i>
-                        <span>Niveau d'alerte érosion</span>
-                        <span class="risk-level orange">MODÉRÉ</span>
-                    </div>
-                </div>
-
-                <div class="kpi-grid">
-                    <div class="kpi-card">
-                        <div class="kpi-header"><span>Recul annuel moyen</span><i class="fas fa-arrow-trend-down"></i></div>
-                        <div class="kpi-value">1.84 <span class="kpi-unit">m/an</span></div>
-                        <div class="kpi-trend"><span class="trend-up"><i class="fas fa-angle-up"></i> +0.23 m vs 2025</span></div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-header"><span>Zone rouge (critique)</span><i class="fas fa-skull-crosswalk"></i></div>
-                        <div class="kpi-value">4.2 <span class="kpi-unit">km</span></div>
-                        <div class="kpi-trend"><span class="trend-up">+0.7 km depuis 2024</span></div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-header"><span>Points de suivi GPS</span><i class="fas fa-satellite-dish"></i></div>
-                        <div class="kpi-value">156</div>
-                        <div class="kpi-trend"><span class="trend-down">3 stations neuves</span></div>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="kpi-header"><span>Zones non constructibles</span><i class="fas fa-ban"></i></div>
-                        <div class="kpi-value">12</div>
-                        <div class="kpi-trend">dont 3 nouvelles en 2026</div>
-                    </div>
-                </div>
-
-                <section class="map-section">
-                    <div class="section-header">
-                        <h3><i class="fas fa-map-location-dot"></i>Littoral Agadir – Taghazout · évolution 2016–2026</h3>
-                        <div class="legend">
-                            <span><span class="legend-color" style="background:#0066b3;"></span>trait 2016</span>
-                            <span><span class="legend-color" style="background:#ffaa33;"></span>trait 2021</span>
-                            <span><span class="legend-color" style="background:#d62728;"></span>trait 2026</span>
-                        </div>
-                    </div>
-                    <div id="coastMap"></div>
-                </section>
-
-                <div class="charts-row">
-                    <div class="chart-card">
-                        <div class="chart-title"><i class="fas fa-chart-simple chart-icon-blue"></i>Recul annuel par secteur (m)</div>
-                        <canvas id="erosionSectorChart"></canvas>
-                        <div class="chart-legend"><span><i class="fas fa-circle" style="color:#2b6c8f;"></i>Recul actuel</span></div>
-                    </div>
-                    <div class="chart-card">
-                        <div class="chart-title"><i class="fas fa-chart-line chart-icon-orange"></i>Historique du recul (m) – zone Agadir sud</div>
-                        <canvas id="historyLineChart"></canvas>
-                    </div>
-                </div>
-
-                <section class="risk-table-container">
-                    <div class="section-header">
-                        <h3><i class="fas fa-table-list"></i>Zones de vigilance & interdiction de construire</h3>
-                        <span class="action-btn"><i class="fas fa-rotate"></i>mis à jour par trigger</span>
-                    </div>
-                    <div class="table-responsive">
-                        <table>
-                            <thead><tr><th>Zone</th><th>Coordonnées</th><th>Recul (m/an)</th><th>Statut</th><th>Interdiction</th></tr></thead>
-                            <tbody id="riskTableBody"></tbody>
-                        </table>
-                    </div>
-                    <div class="alert-info"><i class="fas fa-circle-info"></i>Les zones Rouges sont totalement interdites à la construction.</div>
-                </section>
-
-            </div>
-
-            <!-- PAGE 2: LITTORAL MAP -->
-            <div id="page-littoral" class="page-content">
-                <div class="top-bar">
-                    <div class="page-title"><h1>Carte du Littoral</h1><p>Visualisation interactive des points de suivi</p></div>
-                </div>
-                <section class="map-section">
-                    <div class="section-header"><h3><i class="fas fa-map-marked-alt"></i>Points de mesure GPS</h3></div>
-                    <div id="fullscreenMap" style="height: 500px; width: 100%; border-radius: 24px;"></div>
-                </section>
-                <div class="footer-note">Carte interactive des points GPS · cliquer sur un point pour voir les détails</div>
-            </div>
-
-            <!-- PAGE 3: HISTORICAL DATA -->
-            <div id="page-historical" class="page-content">
-                <div class="top-bar">
-                    <div class="page-title"><h1>Données Historiques</h1><p>Évolution du recul sur les 10 dernières années</p></div>
-                </div>
-                <div class="charts-row">
-                    <div class="chart-card" style="grid-column: span 2;">
-                        <div class="chart-title"><i class="fas fa-chart-line chart-icon-orange"></i>Évolution du recul cumulé</div>
-                        <canvas id="historyChartFull" style="height: 350px;"></canvas>
-                    </div>
-                </div>
-                <div class="risk-table-container">
-                    <div class="section-header"><h3><i class="fas fa-calendar-alt"></i>Relevés par année</h3></div>
-                    <div class="table-responsive">
-                        <table id="historical-table"><thead><tr><th>Zone</th><th>Année</th><th>Recul (m)</th><th>Classification</th></tr></thead><tbody></tbody></table>
-                    </div>
-                </div>
-                <div class="footer-note">Données historiques basées sur les relevés terrain depuis 2016</div>
-            </div>
-
-            <!-- PAGE 4: RISK ZONES -->
-            <div id="page-riskzones" class="page-content">
-                <div class="top-bar">
-                    <div class="page-title"><h1>Zones à Risque</h1><p>Classification et restrictions de construction</p></div>
-                </div>
-                <div class="risk-table-container">
-                    <div class="section-header"><h3><i class="fas fa-exclamation-triangle"></i>Zones de vigilance</h3></div>
-                    <div class="table-responsive">
-                        <table id="risk-table-full"><thead><tr><th>Zone</th><th>Coordonnées</th><th>Recul (m/an)</th><th>Statut</th><th>Constructibilité</th></tr></thead><tbody></tbody></table>
-                    </div>
-                </div>
-                <div class="footer-note">Classification automatique basée sur le recul annuel moyen</div>
-            </div>
-
-            <!-- PAGE 5: AUDIT REPORTS -->
-            <div id="page-audit" class="page-content">
-                <div class="top-bar">
-                    <div class="page-title"><h1>Rapports d'Audit</h1><p>Journal des modifications et alertes système</p></div>
-                </div>
-                <div class="risk-table-container">
-                    <div class="section-header"><h3><i class="fas fa-history"></i>Historique des changements de classification</h3></div>
-                    <div class="table-responsive">
-                        <table id="audit-table"><thead><tr><th>Zone</th><th>Classification avant</th><th>Classification après</th><th>Date</th><th>Justification</th></tr></thead><tbody><tr><td colspan="5" style="text-align:center;">Chargement des données...</td></tr></tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="footer-note">Chaque changement de classification est automatiquement journalisé</div>
-            </div>
-
-            <!-- PAGE 6: SAISIE TERRAIN -->
-            <div id="page-dataentry" class="page-content">
-                <div class="top-bar">
-                    <div class="page-title">
-                        <h1><i class="fas fa-pen-ruler"></i> Saisie des relevés terrain</h1>
-                        <p>Ajouter de nouvelles mesures GPS pour mettre à jour les analyses en temps réel</p>
-                    </div>
-                    <div class="risk-badge">
-                        <i class="fas fa-user-check"></i>
-                        <span>Rôle : Agent terrain</span>
-                        <span class="risk-level" style="color:#2b6c8f;">EXPERT</span>
-                    </div>
-                </div>
-
-                <div class="charts-row">
-                    <div class="chart-card">
-                        <div class="chart-title"><i class="fas fa-map-marker-alt chart-icon-blue"></i>Nouveau relevé GPS</div>
-                        <form id="releveForm">
-                            <div style="margin-bottom: 20px;">
-                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1e4057;"><i class="fas fa-map-pin"></i> Point de mesure *</label>
-                                <select id="id_point" required style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #cbd5e1;">
-                                    <option value="">-- Sélectionner un point GPS --</option>
-                                </select>
-                                <small style="color: #6e8ba2;">Sélectionnez le point fixe où la mesure a été prise</small>
-                            </div>
-                            <div style="margin-bottom: 20px;">
-                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1e4057;"><i class="fas fa-ruler"></i> Distance au trait de côte (mètres) *</label>
-                                <input type="number" id="distance" step="0.1" required style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #cbd5e1;">
-                                <small style="color: #6e8ba2;">Distance mesurée depuis le point fixe jusqu'au bord de mer</small>
-                            </div>
-                            <div style="margin-bottom: 20px;">
-                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1e4057;"><i class="fas fa-microchip"></i> Méthode de mesure</label>
-                                <select id="methode" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #cbd5e1;">
-                                    <option value="GPS_DGPS">📡 GPS différentiel (précision cm)</option>
-                                    <option value="DRONE">🛸 Drone / Photogrammétrie</option>
-                                    <option value="SATELLITE">🛰️ Imagerie satellite</option>
-                                    <option value="JALONNEMENT">📏 Jalonnement terrain</option>
-                                </select>
-                            </div>
-                            <div style="margin-bottom: 20px;">
-                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #1e4057;"><i class="fas fa-user"></i> Agent terrain</label>
-                                <select id="id_agent" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #cbd5e1;">
-                                    <option value="">-- Sélectionner l'agent --</option>
-                                </select>
-                                <small style="color: #6e8ba2;">L'agent qui a effectué la mesure sur le terrain</small>
-                            </div>
-                            <button type="submit" style="background: linear-gradient(135deg, #2b6c8f, #164863); color: white; padding: 14px 24px; border: none; border-radius: 30px; cursor: pointer; width: 100%; font-weight: bold; font-size: 16px;">
-                                <i class="fas fa-save"></i> Enregistrer le relevé
-                            </button>
-                        </form>
-                    </div>
-
-                    <div class="chart-card">
-                        <div class="chart-title"><i class="fas fa-history chart-icon-orange"></i>Derniers relevés enregistrés</div>
-                        <div class="table-responsive" style="max-height: 350px; overflow-y: auto;">
-                            <table id="lastRelevesTable" style="width:100%">
-                                <thead><tr style="background:#f8fafc;"><th>Point</th><th>Distance</th><th>Date</th><th>Statut</th></tr></thead>
-                                <tbody><tr><td colspan="4" style="text-align:center;">Chargement...</td></tr></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="messageBox" style="display: none; margin-top: 20px; padding: 15px; border-radius: 16px;"></div>
-
-                
-            </div>
-        </main>
+          <div
+            id="messageBox"
+            style="
+              display: none;
+              margin-top: 20px;
+              padding: 15px;
+              border-radius: 16px;
+            "
+          ></div>
+        </div>
+      </main>
     </div>
 
     <script src="script.js"></script>
-</body>
+  </body>
 </html>
