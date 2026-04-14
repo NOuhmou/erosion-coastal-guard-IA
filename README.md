@@ -107,7 +107,7 @@ erosion-coastal-guard-IA/
 
 **1. Cloner le dépôt**
 ```bash
-git clone https://github.com/<votre-org>/erosion-coastal-guard-IA.git
+git clone https://github.com/NOuhmou/erosion-coastal-guard-IA.git
 cd erosion-coastal-guard-IA
 ```
 
