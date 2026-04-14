@@ -197,9 +197,9 @@ Ce projet a été réalisé avec l'assistance d'outils d'IA dans un cadre acadé
 
 | Membre | Rôle |
 |---|---|
-| Najat | Développement & Architecture |
-| Salma | Développement & Base de données |
-| Haytem | Développement & Frontend |
+| Najat OUDAOUD OUHMOU | Développement & Architecture |
+| Mohamed haytem najim hassane | Développement & Base de données & Backend |
+| Salma OTMANE| Développement & Frontend |
 
 ---
 
