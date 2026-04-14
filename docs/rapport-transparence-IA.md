@@ -180,17 +180,6 @@ Une **hallucination** désigne une erreur produite par l'IA : code incorrect, sy
 
 ## 5. Analyse comparative : IA vs Développement Manuel
 
-### Tableau comparatif
-
-| Critère | Approche IA (réelle) | Approche manuelle (estimée) |
-|---------|---------------------|------------------------------|
-| Temps de développement | **2 jours** | 5 à 6 jours |
-| Lignes de code produites | ~1 200 lignes | ~800 lignes |
-| Corrections nécessaires | 7 interventions | ~5 interventions |
-| Documentation | Générée automatiquement | À rédiger manuellement |
-| Gain de temps estimé | **~60 %** | — |
-| Cohérence du code | Bonne (à vérifier) | Maîtrisée dès l'écriture |
-| Courbe d'apprentissage | Faible (prompting) | Élevée (maîtrise technique) |
 
 ### Analyse
 
